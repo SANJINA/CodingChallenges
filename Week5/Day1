@@ -1,0 +1,36 @@
+Fetch matching author_name, book_name, book_title, publication_year from tables mentioned (Exact record onlu be there).
+
+select a.author_name, b.book_name, b.book_title, b.publication_year
+from public.authors as a
+inner join public.books as b on a.author_id = b.author_id
+
+--Fetch all author_name, book_name, book_title, publication_year from tables mentioned (If if mapping not found , print those records)
+select a.author_name, b.book_name, b.book_title, b.publication_year
+from public.authors as a
+left outer join public.books as b on a.author_id = b.author_id
+
+--Fetch student_name,book_name,author_name if book_loan_id = 4
+
+Select bl.student_name, b.book_name, a.author_name
+from public.books_loan as bl
+inner join public.books as b on bl.book_id = b.book_id
+inner join public.authors as a on a.author_id = b.author_id
+where bl.loan_id = 4
+
+--Fecth all records with column book_name,book_title , author_name where book_title='Programming'
+select a.author_name, b.book_name, b.book_title
+from public.authors as a
+inner join public.books as b on a.author_id = b.author_id
+where b.book_title = 'Programming'
+
+--Fecth book_name who are not mapped in book_loan table.
+select b.book_name, bl.*
+from public.books as b
+inner join public.books_loan as bl on bl.book_id = b.book_id
+where b.book_id NOT IN (select book_id from public.books_loan)
+
+--Print student_name who have taken more than 1 book in book_loan
+select student_name, Count(book_id) as bookcount
+from public.books_loan
+group by student_name
+having Count(book_id) > 1
